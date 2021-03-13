@@ -24,14 +24,7 @@ const fontSizeText = {
 function Login() {
   return (
     <Container maxWidth="xs">
-      <Box
-        marginTop="10vh"
-        display="flex"
-        flexDirection="column"
-        alignItems="center"
-        component={Paper}
-        padding={4}
-      >
+      <Box className="mt-16 md:flex-row flex flex-col items-center  p-10" component={Paper}>
         <Box display="flex" alignItems="center" marginBottom={2}>
           <Logo height={30} width={30} marginRight={0.5} />
           <Typography variant="h6">

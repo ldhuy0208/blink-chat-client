@@ -104,6 +104,9 @@ function App(props) {
           },
         })
       : createMuiTheme({
+          typography: {
+            fontSize: 16,
+          },
           palette: {
             type: "light",
             background: {
