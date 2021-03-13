@@ -87,7 +87,7 @@ export default function Navigation() {
   return (
     <Paper className={classes.root}>
       <Hidden smDown>
-        <Logo />
+        <Logo width={45} height={45} />
       </Hidden>
       <div className={classes.actions}>
         {actions.map((action) => (

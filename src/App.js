@@ -4,6 +4,7 @@ import {
   Divider,
   makeStyles,
   ThemeProvider,
+  useTheme,
 } from "@material-ui/core";
 import Navigation from "components/Navigation/Navigation";
 import ChatView from "containers/ChatView";
@@ -11,6 +12,8 @@ import AccountPage from "pages/AccountPage/AccountPage";
 import ChatPage from "pages/ChatPage/ChatPage";
 import ContactPage from "pages/ContactPage/ContactPage";
 import GroupPage from "pages/GroupPage/GroupPage";
+import Login from "pages/Login/Login";
+import Register from "pages/Register/Register";
 import SettingPage from "pages/SettingPage/SettingPage";
 import React from "react";
 import { connect } from "react-redux";
@@ -59,7 +62,7 @@ const useStyles = makeStyles((theme) => ({
     gridArea: "chatContent",
     height: "100%",
     overflow: "hidden",
-    backgroundColor: theme.palette.background.paper,
+    // backgroundColor: theme.palette.background.paper,
 
     position: "fixed",
     width: "100%",
@@ -90,45 +93,72 @@ const useStyles = makeStyles((theme) => ({
 
 function App(props) {
   const classes = useStyles();
-  const theme = createMuiTheme({
-    palette: {
-      type: props.theme,
-    },
-  });
-
+  const theme =
+    props.theme === "dark"
+      ? createMuiTheme({
+          palette: {
+            type: "dark",
+            primary: {
+              main: "#7269ef",
+            },
+          },
+        })
+      : createMuiTheme({
+          palette: {
+            type: "light",
+            background: {
+              default: "#f7f7ff",
+            },
+            primary: {
+              main: "#7269ef",
+            },
+          },
+        });
   return (
     <ThemeProvider theme={theme}>
-      <div className={classes.root}>
-        <CssBaseline />
-        <div className={classes.navigation}>
-          <Navigation />
-        </div>
-        <div className={classes.pages}>
-          <Switch>
-            <Route path="/chats">
-              <ChatPage />
-            </Route>
-            <Route path="/contacts">
-              <ContactPage />
-            </Route>
-            <Route path="/groups">
-              <GroupPage />
-            </Route>
-            <Route path="/settings">
-              <SettingPage />
-            </Route>
-            <Route path="/account">
-              <AccountPage />
-            </Route>
-            <Route path="/">
-              <Redirect to="/chats" />
-            </Route>
-          </Switch>
-        </div>
-        <div className={classes.chatContent + " " + classes.chatContentHide}>
-          <ChatView />
-        </div>
-      </div>
+      <CssBaseline />
+      <Switch>
+        <Route path="/login">
+          <Login />
+        </Route>
+        <Route path="/register">
+          <Register />
+        </Route>
+        <Route path="/">
+          <div className={classes.root}>
+            <div className={classes.navigation}>
+              <Navigation />
+            </div>
+            <div className={classes.pages}>
+              <Switch>
+                <Route path="/chats">
+                  <ChatPage />
+                </Route>
+                <Route path="/contacts">
+                  <ContactPage />
+                </Route>
+                <Route path="/groups">
+                  <GroupPage />
+                </Route>
+                <Route path="/settings">
+                  <SettingPage />
+                </Route>
+                <Route path="/account">
+                  <AccountPage />
+                </Route>
+                <Route path="/">
+                  <Redirect to="/chats" />
+                </Route>
+              </Switch>
+            </div>
+            <div
+              className={classes.chatContent + " " + classes.chatContentHide}
+            >
+              <ChatView />
+            </div>
+          </div>
+        </Route>
+      </Switch>
     </ThemeProvider>
   );
 }

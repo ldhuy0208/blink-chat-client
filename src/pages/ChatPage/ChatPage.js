@@ -11,6 +11,7 @@ import {
   ListSubheader,
   makeStyles,
   Typography,
+  useTheme,
 } from "@material-ui/core";
 import React from "react";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
@@ -37,6 +38,8 @@ const useStyles = makeStyles((theme) => ({
 
 function SettingPage(props) {
   const classes = useStyles();
+  const theme = useTheme();
+  console.log(theme)
 
   return (
     <div className={classes.root}>
