@@ -1,4 +1,6 @@
 import {
+  Box,
+  CircularProgress,
   createMuiTheme,
   CssBaseline,
   Divider,
@@ -6,8 +8,13 @@ import {
   ThemeProvider,
   useTheme,
 } from "@material-ui/core";
+import { setUser } from "actions";
+import { axiosClientAuth } from "api/axiosClient";
+import usersApi from "api/usersApi";
 import Navigation from "components/Navigation/Navigation";
 import ChatView from "containers/ChatView";
+import PrivateRoute from "hoc/PrivateRoute";
+import { SnackbarProvider } from "notistack";
 import AccountPage from "pages/AccountPage/AccountPage";
 import ChatPage from "pages/ChatPage/ChatPage";
 import ContactPage from "pages/ContactPage/ContactPage";
@@ -15,9 +22,9 @@ import GroupPage from "pages/GroupPage/GroupPage";
 import Login from "pages/Login/Login";
 import Register from "pages/Register/Register";
 import SettingPage from "pages/SettingPage/SettingPage";
-import React from "react";
+import React, { useEffect } from "react";
 import { connect } from "react-redux";
-import { Redirect, Route, Switch } from "react-router";
+import { Redirect, Route, Switch, useHistory } from "react-router";
 import "simplebar/dist/simplebar.min.css";
 
 const useStyles = makeStyles((theme) => ({
@@ -93,6 +100,8 @@ const useStyles = makeStyles((theme) => ({
 
 function App(props) {
   const classes = useStyles();
+  const history = useHistory();
+
   const theme =
     props.theme === "dark"
       ? createMuiTheme({
@@ -104,9 +113,6 @@ function App(props) {
           },
         })
       : createMuiTheme({
-          typography: {
-            fontSize: 16,
-          },
           palette: {
             type: "light",
             background: {
@@ -117,51 +123,71 @@ function App(props) {
             },
           },
         });
+
+  useEffect(() => {
+    usersApi
+      .getMe()
+      .then((response) => {
+        console.log(response);
+        props.setUser(response.data);
+      })
+      .catch((err) => {
+        props.setUser(null);
+        localStorage.removeItem("token");
+      });
+  }, []);
   return (
     <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <Switch>
-        <Route path="/login">
-          <Login />
-        </Route>
-        <Route path="/register">
-          <Register />
-        </Route>
-        <Route path="/">
-          <div className={classes.root}>
-            <div className={classes.navigation}>
-              <Navigation />
-            </div>
-            <div className={classes.pages}>
-              <Switch>
-                <Route path="/chats">
-                  <ChatPage />
-                </Route>
-                <Route path="/contacts">
-                  <ContactPage />
-                </Route>
-                <Route path="/groups">
-                  <GroupPage />
-                </Route>
-                <Route path="/settings">
-                  <SettingPage />
-                </Route>
-                <Route path="/account">
-                  <AccountPage />
-                </Route>
-                <Route path="/">
-                  <Redirect to="/chats" />
-                </Route>
-              </Switch>
-            </div>
-            <div
-              className={classes.chatContent + " " + classes.chatContentHide}
-            >
-              <ChatView />
-            </div>
-          </div>
-        </Route>
-      </Switch>
+      <SnackbarProvider maxSnack={3}>
+        <CssBaseline />
+
+        <Switch>
+          <Route path="/login">
+            <Login />
+          </Route>
+          <Route path="/register">
+            <Register />
+          </Route>
+          <Route path="/">
+            <PrivateRoute>
+              <div className={classes.root}>
+                <div className={classes.navigation}>
+                  <Navigation />
+                </div>
+                <div className={classes.pages}>
+                  <Switch>
+                    <Route path="/chats">
+                      <ChatPage />
+                    </Route>
+                    <Route path="/contacts">
+                      <ContactPage />
+                    </Route>
+                    <Route path="/groups">
+                      <GroupPage />
+                    </Route>
+                    <Route path="/settings">
+                      <SettingPage />
+                    </Route>
+                    <Route path="/account">
+                      <AccountPage />
+                    </Route>
+                    <Route path="/">
+                      <Redirect to="/chats" />
+                    </Route>
+                  </Switch>
+                </div>
+                <div
+                  className={
+                    classes.chatContent + " " + classes.chatContentHide
+                  }
+                >
+                  <ChatView />
+                </div>
+              </div>
+            </PrivateRoute>
+          </Route>
+        </Switch>
+      </SnackbarProvider>
     </ThemeProvider>
   );
 }
@@ -169,6 +195,7 @@ function App(props) {
 const mapStateToProps = (state) => {
   return {
     theme: state.theme,
+    user: state.user,
   };
 };
-export default connect(mapStateToProps)(App);
+export default connect(mapStateToProps, { setUser })(App);

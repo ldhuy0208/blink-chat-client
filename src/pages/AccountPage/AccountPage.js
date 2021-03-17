@@ -2,6 +2,7 @@ import {
   Avatar,
   Badge,
   Box,
+  Button,
   Divider,
   FormControlLabel,
   IconButton,
@@ -12,6 +13,8 @@ import {
 } from "@material-ui/core";
 import React from "react";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
+import { connect } from "react-redux";
+import { setUser } from "actions";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -29,7 +32,7 @@ const useStyles = makeStyles((theme) => ({
     color: "#44b700",
     width: theme.spacing(2),
     height: theme.spacing(2),
-    borderRadius: '50%',
+    borderRadius: "50%",
     boxShadow: `0 0 0 2px ${theme.palette.background.paper}`,
     "&::after": {
       position: "absolute",
@@ -59,8 +62,12 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function AccountPage() {
+function AccountPage(props) {
   const classes = useStyles();
+  const logout = () => {
+    props.setUser(null);
+    localStorage.removeItem("token");
+  };
   return (
     <div className={classes.root}>
       <Box display="flex" alignItems="center" justifyContent="space-between">
@@ -88,13 +95,14 @@ function AccountPage() {
         </Badge>
         <Typography>Le Huy</Typography>
         <FormControlLabel label="Active" control={<Switch color="primary" />} />
+        <Button variant="outlined" color="primary" onClick={logout}>
+          Log out
+        </Button>
       </Box>
-      <Divider/>
-      <List disablePadding className={classes.list}>
-
-      </List>
+      <Divider />
+      <List disablePadding className={classes.list}></List>
     </div>
   );
 }
 
-export default AccountPage;
+export default connect(null, { setUser })(AccountPage);

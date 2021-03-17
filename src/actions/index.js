@@ -6,3 +6,10 @@ export const setTheme = (theme) => {
     payload: theme,
   };
 };
+
+export const setUser = (user) => {
+  return {
+    type: types.SET_USER,
+    payload: user,
+  };
+};
