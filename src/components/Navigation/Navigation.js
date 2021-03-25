@@ -90,8 +90,8 @@ export default function Navigation() {
         <Logo width={45} height={45} />
       </Hidden>
       <div className={classes.actions}>
-        {actions.map((action) => (
-          <Action action={action}>{action.icon}</Action>
+        {actions.map((action, index) => (
+          <Action key={index} action={action}>{action.icon}</Action>
         ))}
         <Hidden mdUp>
           <AccountAcction />

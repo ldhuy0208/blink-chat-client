@@ -13,3 +13,10 @@ export const setUser = (user) => {
     payload: user,
   };
 };
+
+export const setConversation = (conversation) => {
+  return {
+    type: types.SET_CONVERSATION,
+    payload: conversation,
+  };
+};

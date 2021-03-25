@@ -1,4 +1,5 @@
 export default {
   SET_THEME: "SET_THEME",
   SET_USER: "SET_USER",
+  SET_CONVERSATION: "SET_CONVERSATION"
 };

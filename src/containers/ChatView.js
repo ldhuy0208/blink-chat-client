@@ -55,15 +55,10 @@ function ChatView(props) {
       <Toolbar className={classes.header}>
         <ListItem disableGutters dense>
           <ListItemAvatar>
-            <Avatar
-              alt="Remy Sharp"
-              src={props.selectedMessage.current.avatar}
-            />
+            <Avatar alt="Remy Sharp" src={props.conversation?.avatar} />
           </ListItemAvatar>
           <ListItemText
-            primary={
-              <Typography>{props.selectedMessage.current?.name}</Typography>
-            }
+            primary={<Typography>{props.conversation?.name}</Typography>}
             secondary="Online"
           />
         </ListItem>
@@ -130,7 +125,7 @@ function ChatView(props) {
 }
 const mapStateToProps = (state) => {
   return {
-    selectedMessage: state.selectedMessage,
+    conversation: state.conversation,
   };
 };
 export default connect(mapStateToProps)(ChatView);
